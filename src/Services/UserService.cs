@@ -11,16 +11,19 @@ namespace DotnetSampleService.Services
             _repo = repo;
         }
 
-        // BUG: no null check — throws NullReferenceException when user not found
         public string GetUserEmail(int userId)
         {
             var user = _repo.FindById(userId);
+            if (user == null)
+                throw new InvalidOperationException($"User with id {userId} was not found.");
             return user.Email;
         }
 
         public void DeactivateUser(int userId)
         {
             var user = _repo.FindById(userId);
+            if (user == null)
+                throw new InvalidOperationException($"User with id {userId} was not found.");
             user.IsActive = false;
             _repo.Save(user);
         }
